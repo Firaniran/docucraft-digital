@@ -1,0 +1,2079 @@
+/* ==========================================================================
+   DOCUCRAFT DIGITAL - SURAT & CV GENERATOR DESIGN SYSTEM
+   ========================================================================== */
+
+:root {
+  /* Color Palette */
+  --primary: #1e40af;
+  --primary-hover: #1d4ed8;
+  --primary-light: #eff6ff;
+  --primary-border: #bfdbfe;
+  
+  --secondary: #0f172a;
+  --secondary-light: #f8fafc;
+  
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  
+  --border-color: #e2e8f0;
+  --border-focus: #3b82f6;
+  
+  --bg-app: #f1f5f9;
+  --bg-panel: #ffffff;
+  --bg-viewport: #e2e8f0;
+  --bg-paper: #ffffff;
+  
+  --success: #10b981;
+  --danger: #ef4444;
+  --warning: #f59e0b;
+  
+  /* CV Accent Custom Variable (Dynamically changed via JS) */
+  --cv-accent: #1e40af;
+  --cv-accent-light: #eff6ff;
+  --cv-accent-border: #bfdbfe;
+  
+  /* Typography */
+  --font-ui: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-formal: "Times New Roman", Times, "Tinos", serif;
+  --font-elegant: "Merriweather", Georgia, serif;
+  --font-modern: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-code: "Consolas", "Courier New", monospace;
+  
+  /* Shadows & Radius */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-paper: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 9999px;
+  
+  /* Transitions */
+  --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reset & Box Sizing */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-ui);
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+/* Accessibility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ==========================================================================
+   HEADER BAR & MODE SWITCHER
+   ========================================================================== */
+
+.app-header {
+  background-color: var(--bg-panel);
+  border-bottom: 1px solid var(--border-color);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  box-shadow: var(--shadow-sm);
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-logo {
+  width: 38px;
+  height: 38px;
+  background: linear-gradient(135deg, #1e40af, #3b82f6);
+  color: white;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+}
+
+.brand-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--secondary);
+  line-height: 1.2;
+}
+
+.brand-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Mode Switcher Nav (Surat vs CV) */
+.mode-nav-switcher {
+  display: flex;
+  background-color: var(--bg-app);
+  padding: 4px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+  gap: 4px;
+}
+
+.mode-switch-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 6px 16px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.mode-switch-btn:hover {
+  color: var(--text-main);
+}
+
+.mode-switch-btn.active {
+  background-color: #ffffff;
+  color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   BUTTONS & FORM CONTROLS
+   ========================================================================== */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: #ffffff;
+  box-shadow: 0 2px 4px rgba(30, 64, 175, 0.2);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(30, 64, 175, 0.25);
+}
+
+.btn-secondary {
+  background-color: #ffffff;
+  color: var(--text-main);
+  border-color: var(--border-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--secondary-light);
+  border-color: #cbd5e1;
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--text-main);
+  border-color: var(--border-color);
+}
+
+.btn-outline:hover {
+  background-color: var(--secondary-light);
+  border-color: var(--primary-border);
+  color: var(--primary);
+}
+
+.btn-sm {
+  padding: 5px 10px;
+  font-size: 0.78rem;
+  border-radius: var(--radius-sm);
+}
+
+.btn-text {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.82rem;
+  padding: 4px 8px;
+  font-family: var(--font-ui);
+}
+
+.btn-text-subtle {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+
+.btn-text-subtle:hover {
+  color: var(--danger);
+  background-color: #fee2e2;
+}
+
+.btn-select {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 7px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background-color: #ffffff;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: var(--transition);
+  outline: none;
+}
+
+.btn-select:hover, .btn-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.text-danger {
+  color: var(--danger) !important;
+}
+
+/* ==========================================================================
+   MAIN APP LAYOUT (SPLIT PANEL)
+   ========================================================================== */
+
+.app-main {
+  display: flex;
+  flex: 1;
+  height: calc(100vh - 65px);
+  overflow: hidden;
+}
+
+/* Left Editor Panels */
+.editor-panel {
+  width: 490px;
+  min-width: 380px;
+  max-width: 540px;
+  background-color: var(--bg-panel);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.panel-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  background-color: #ffffff;
+}
+
+.tabs-nav {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  background-color: var(--bg-app);
+  padding: 4px;
+  border-radius: var(--radius-md);
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 8px 4px;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: var(--transition);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tab-btn:hover {
+  color: var(--text-main);
+}
+
+.tab-btn.active {
+  background-color: #ffffff;
+  color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tab-content {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tab-content.active {
+  display: flex;
+}
+
+.form-card {
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card-header-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 8px;
+  margin-bottom: 4px;
+}
+
+.form-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--secondary);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.form-row .col {
+  flex: 1;
+}
+
+.form-control {
+  width: 100%;
+  padding: 7px 11px;
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  color: var(--text-main);
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: var(--transition);
+}
+
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+textarea.form-control {
+  resize: vertical;
+  line-height: 1.45;
+}
+
+.font-mono {
+  font-family: var(--font-code);
+  font-size: 0.8rem;
+}
+
+.help-text {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.form-divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 4px 0;
+}
+
+/* Switch Toggle */
+.form-group-toggle {
+  display: flex;
+  align-items: center;
+}
+
+.switch-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.switch-label input {
+  display: none;
+}
+
+.switch-slider {
+  width: 36px;
+  height: 20px;
+  background-color: #cbd5e1;
+  border-radius: var(--radius-full);
+  position: relative;
+  transition: var(--transition);
+}
+
+.switch-slider::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+.switch-label input:checked + .switch-slider {
+  background-color: var(--primary);
+}
+
+.switch-label input:checked + .switch-slider::before {
+  transform: translateX(16px);
+}
+
+.file-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.file-input {
+  display: none;
+}
+
+.file-btn-label {
+  cursor: pointer;
+}
+
+/* Color Picker for CV */
+.color-picker-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.cv-color-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.cv-color-dot.active {
+  transform: scale(1.2);
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--primary);
+}
+
+/* Dynamic Item Card (Experience, Education, Certificate) */
+.dynamic-items-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dynamic-item-card {
+  border: 1px solid var(--border-color);
+  background-color: var(--secondary-light);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+}
+
+.dynamic-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.dynamic-item-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-transform: uppercase;
+}
+
+/* Signature & Stamp Controls */
+.signature-manager {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sign-preview-box {
+  border: 2px dashed var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  min-height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--secondary-light);
+}
+
+.sign-preview-box img {
+  max-height: 70px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.sign-placeholder-text {
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+
+.sign-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Panel Footer */
+.panel-footer {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+}
+
+.status-indicator {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dot-online {
+  width: 8px;
+  height: 8px;
+  background-color: var(--success);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+/* ==========================================================================
+   RIGHT PANEL: LIVE A4 PAPER VIEWPORT
+   ========================================================================== */
+
+.preview-panel {
+  flex: 1;
+  background-color: var(--bg-viewport);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.preview-toolbar {
+  padding: 10px 24px;
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+}
+
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  padding: 2px 6px;
+  border-radius: var(--radius-md);
+}
+
+.btn-tool {
+  background: none;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: bold;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.btn-tool:hover {
+  background-color: var(--secondary-light);
+  color: var(--primary);
+}
+
+.zoom-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  min-width: 44px;
+  text-align: center;
+}
+
+.paper-badge {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background-color: #ffffff;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+}
+
+.paper-viewport {
+  flex: 1;
+  overflow: auto;
+  padding: 30px 20px 80px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* ==========================================================================
+   A4 SHEET STYLING (SURAT RESMI)
+   ========================================================================== */
+
+.a4-sheet {
+  width: 210mm;
+  min-height: 297mm;
+  padding: 24mm 20mm 20mm 20mm;
+  background-color: var(--bg-paper);
+  box-shadow: var(--shadow-paper);
+  border-radius: 2px;
+  color: #000000;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  transform-origin: top center;
+  transition: transform 0.15s ease-out;
+}
+
+/* Typography Presets for Letter */
+.font-serif-formal {
+  font-family: var(--font-formal);
+  font-size: 12pt;
+  line-height: 1.35;
+}
+
+.font-serif-elegant {
+  font-family: var(--font-elegant);
+  font-size: 11pt;
+  line-height: 1.45;
+}
+
+.font-sans {
+  font-family: var(--font-modern);
+  font-size: 10.5pt;
+  line-height: 1.4;
+}
+
+/* Kop Surat */
+.letter-kop {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  margin-bottom: 14pt;
+  padding-bottom: 8pt;
+}
+
+.kop-logo-container {
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.kop-logo {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.kop-text-container {
+  flex: 1;
+  text-align: center;
+}
+
+.kop-instansi {
+  font-size: 15pt;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 1pt;
+}
+
+.kop-sub {
+  font-size: 11.5pt;
+  font-weight: bold;
+  margin-bottom: 2pt;
+}
+
+.kop-alamat {
+  font-size: 9.5pt;
+  margin-bottom: 1pt;
+}
+
+.kop-kontak {
+  font-size: 9pt;
+  font-style: italic;
+}
+
+.kop-sep {
+  margin: 0 4px;
+}
+
+.kop-divider {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5px;
+}
+
+.kop-line-thick {
+  height: 2.5px;
+  background-color: #000000;
+}
+
+.kop-line-thin {
+  height: 1px;
+  background-color: #000000;
+}
+
+/* Meta Header */
+.letter-meta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16pt;
+}
+
+.meta-table {
+  border-collapse: collapse;
+  font-size: inherit;
+}
+
+.meta-key {
+  padding: 1px 0;
+  white-space: nowrap;
+  vertical-align: top;
+}
+
+.meta-colon {
+  padding: 1px 6px;
+  vertical-align: top;
+}
+
+.meta-val {
+  padding: 1px 0;
+  vertical-align: top;
+}
+
+.font-bold {
+  font-weight: bold;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+.meta-right {
+  text-align: right;
+}
+
+.letter-date {
+  white-space: nowrap;
+}
+
+/* Recipient / Tujuan */
+.letter-recipient {
+  margin-bottom: 16pt;
+  line-height: 1.35;
+}
+
+.recipient-to {
+  margin-bottom: 2pt;
+}
+
+.recipient-name {
+  margin-bottom: 1pt;
+}
+
+.recipient-instansi {
+  margin-bottom: 1pt;
+}
+
+/* Letter Body Content */
+.letter-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10pt;
+  text-align: justify;
+  text-justify: inter-word;
+}
+
+.letter-salutation {
+  margin-bottom: 4pt;
+}
+
+.letter-paragraph {
+  text-indent: 28pt;
+  line-height: 1.45;
+}
+
+.letter-details {
+  margin: 4pt 0 6pt 28pt;
+}
+
+.details-pre {
+  font-family: inherit;
+  font-size: inherit;
+  white-space: pre-wrap;
+  line-height: 1.4;
+}
+
+.letter-closing {
+  margin-top: 4pt;
+  margin-bottom: 0;
+}
+
+/* Signature & QR Section */
+.letter-signature-section {
+  margin-top: 20pt;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  page-break-inside: avoid;
+}
+
+.qr-verify-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border: 1px dashed #94a3b8;
+  border-radius: var(--radius-sm);
+  background-color: #fafafa;
+  max-width: 240px;
+}
+
+.qr-code-img-wrapper {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-code-img-wrapper svg {
+  width: 100%;
+  height: 100%;
+}
+
+.qr-label-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.qr-secure-badge {
+  font-size: 7pt;
+  font-weight: bold;
+  color: #1e3a8a;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  text-transform: uppercase;
+}
+
+.qr-doc-hash {
+  font-size: 6.5pt;
+  color: #64748b;
+  font-family: var(--font-code);
+  word-break: break-all;
+}
+
+.signature-box {
+  text-align: center;
+  min-width: 220px;
+  position: relative;
+}
+
+.signer-title {
+  margin-bottom: 4pt;
+}
+
+.signer-canvas-area {
+  position: relative;
+  height: 75px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sign-spacing {
+  height: 75px;
+}
+
+.sign-image {
+  max-height: 75px;
+  max-width: 180px;
+  position: absolute;
+  z-index: 2;
+}
+
+.stamp-overlay {
+  max-height: 85px;
+  max-width: 110px;
+  position: absolute;
+  left: 10px;
+  top: -5px;
+  opacity: 0.85;
+  z-index: 1;
+  transform: rotate(-8deg);
+  pointer-events: none;
+}
+
+.signer-name {
+  font-size: inherit;
+  margin-top: 2pt;
+}
+
+.signer-nip {
+  font-size: 9.5pt;
+}
+
+.letter-tembusan {
+  margin-top: 16pt;
+  font-size: 9.5pt;
+  page-break-inside: avoid;
+}
+
+.tembusan-title {
+  font-weight: bold;
+  text-decoration: underline;
+  margin-bottom: 2pt;
+}
+
+.tembusan-list p {
+  margin-bottom: 1pt;
+}
+
+/* ==========================================================================
+   CV (CURRICULUM VITAE) A4 SHEET STYLING
+   ========================================================================== */
+
+.cv-paper {
+  padding: 0 !important;
+  color: #1e293b;
+  display: flex;
+  flex-direction: column;
+}
+
+.cv-layout-wrapper {
+  display: flex;
+  flex: 1;
+  min-height: 297mm;
+}
+
+/* --- Layout 1: 2-Column Sidebar Layout --- */
+.layout-sidebar .cv-sidebar {
+  width: 72mm;
+  background-color: #f8fafc;
+  border-right: 1.5px solid var(--border-color);
+  padding: 18mm 10mm;
+  display: flex;
+  flex-direction: column;
+  gap: 16pt;
+  box-sizing: border-box;
+}
+
+.layout-sidebar .cv-main-content {
+  flex: 1;
+  padding: 18mm 14mm;
+  display: flex;
+  flex-direction: column;
+  gap: 16pt;
+  box-sizing: border-box;
+}
+
+/* --- Layout 2: ATS-Friendly 1-Column Layout --- */
+.layout-ats {
+  background-color: #ffffff !important;
+  color: #1e293b !important;
+  padding: 16mm 18mm !important;
+  box-sizing: border-box;
+}
+
+.layout-ats .cv-layout-wrapper {
+  display: block;
+  width: 100%;
+  min-height: auto;
+}
+
+.layout-ats .cv-sidebar {
+  display: none !important;
+}
+
+.layout-ats .cv-main-content {
+  width: 100%;
+  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+  gap: 8.5pt;
+  box-sizing: border-box;
+}
+
+/* ATS Header */
+.layout-ats .cv-main-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 2px solid var(--cv-accent);
+  padding-bottom: 6pt;
+  margin-bottom: 2pt;
+}
+
+.layout-ats .cv-main-header-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.layout-ats .cv-candidate-name {
+  font-size: 20pt;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin: 0 0 2pt 0;
+  text-transform: uppercase;
+}
+
+.layout-ats .cv-candidate-headline {
+  font-size: 11pt;
+  font-weight: 600;
+  color: var(--cv-accent);
+  margin: 0 0 4.5pt 0;
+  letter-spacing: 0.2px;
+}
+
+.layout-ats .cv-ats-contact-bar {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3pt 6pt;
+  font-size: 8.8pt;
+  color: #334155;
+  line-height: 1.35;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.layout-ats .ats-contact-item {
+  color: #334155;
+  white-space: nowrap;
+}
+
+.layout-ats .ats-sep {
+  color: #94a3b8;
+  font-size: 8.5pt;
+  font-weight: 300;
+  user-select: none;
+  margin: 0 3px;
+}
+
+/* ATS Photo: 28 x 35 mm Rectangle with thin border */
+.layout-ats .cv-ats-photo-wrapper {
+  width: 28mm;
+  height: 35mm;
+  flex-shrink: 0;
+  border: 1px solid #cbd5e1;
+  border-radius: 2px;
+  background-color: #f8fafc;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+}
+
+.layout-ats .cv-ats-photo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.layout-ats .cv-ats-photo-placeholder {
+  font-size: 7.5pt;
+  font-weight: 600;
+  color: #94a3b8;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ATS Section Headings */
+.layout-ats .cv-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5pt;
+  margin-bottom: 0;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.layout-ats .cv-section-title {
+  font-size: 10.2pt;
+  font-weight: 700;
+  color: var(--cv-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  border-bottom: 1.2px solid var(--cv-accent);
+  padding-bottom: 2pt;
+  margin-bottom: 3.5pt;
+  display: flex;
+  align-items: center;
+  page-break-after: avoid;
+  break-after: avoid;
+}
+
+.layout-ats .cv-summary-text {
+  font-size: 8.8pt;
+  line-height: 1.42;
+  color: #1e293b;
+  text-align: justify;
+  margin: 0;
+}
+
+/* ATS Experience & Education Timeline Items (Clean, No graphic bars) */
+.layout-ats .cv-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 6.5pt;
+}
+
+.layout-ats .cv-timeline-item {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5pt;
+  padding: 0;
+  border: none;
+  background: transparent;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+
+.layout-ats .timeline-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: nowrap;
+}
+
+.layout-ats .timeline-role {
+  font-size: 9.6pt;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.layout-ats .timeline-period {
+  font-size: 8.6pt;
+  font-weight: 600;
+  color: #475569;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.layout-ats .timeline-company {
+  font-size: 8.8pt;
+  font-weight: 600;
+  color: #334155;
+  font-style: normal;
+}
+
+.layout-ats .cv-ats-bullets {
+  margin: 2pt 0 0 0;
+  padding-left: 14pt;
+  list-style-type: disc;
+}
+
+.layout-ats .cv-ats-bullets li {
+  font-size: 8.8pt;
+  line-height: 1.38;
+  color: #1e293b;
+  margin-bottom: 1.5pt;
+}
+
+.layout-ats .timeline-desc {
+  font-size: 8.8pt;
+  line-height: 1.35;
+  color: #1e293b;
+  margin-top: 2px;
+  white-space: normal;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.layout-ats .edu-gpa {
+  font-size: 8.8pt;
+  line-height: 1.35;
+  color: #0f172a;
+  font-weight: 600;
+  margin: 0;
+  padding: 0;
+}
+
+.layout-ats .edu-notes {
+  font-size: 8.8pt;
+  line-height: 1.35;
+  color: #334155;
+  margin: 0;
+  padding: 0;
+}
+
+/* ATS Skills Body */
+.layout-ats .cv-ats-skills-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5pt;
+  font-size: 8.8pt;
+  line-height: 1.4;
+  color: #1e293b;
+}
+
+.layout-ats .cv-ats-skill-row {
+  display: block;
+  line-height: 1.4;
+}
+
+.layout-ats .cv-ats-skill-label {
+  color: #0f172a;
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+.layout-ats .cv-ats-skill-list {
+  color: #1e293b;
+}
+
+/* ATS Certifications */
+.layout-ats .cv-certs-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5pt;
+}
+
+.layout-ats .cv-cert-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 8.8pt;
+  color: #1e293b;
+}
+
+.layout-ats .cv-cert-name {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.layout-ats .cv-cert-issuer {
+  color: #475569;
+  font-size: 8.6pt;
+}
+
+.layout-ats .cv-cert-year {
+  color: #475569;
+  font-weight: 600;
+  font-size: 8.6pt;
+  white-space: nowrap;
+}
+
+/* ATS Languages */
+.layout-ats .cv-ats-lang-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2pt;
+  font-size: 8.8pt;
+  line-height: 1.4;
+  color: #1e293b;
+}
+
+.layout-ats .cv-ats-lang-item {
+  font-size: 8.8pt;
+  line-height: 1.4;
+  color: #1e293b;
+}
+
+/* Hide ATS-only sections in non-ATS layouts */
+.layout-sidebar .cv-ats-skills-section,
+.layout-sidebar .cv-ats-lang-section,
+.layout-sidebar .cv-ats-photo-wrapper,
+.layout-compact .cv-ats-skills-section,
+.layout-compact .cv-ats-lang-section,
+.layout-compact .cv-ats-photo-wrapper {
+  display: none !important;
+}
+
+/* --- Layout 3: Compact Modern --- */
+.layout-compact .cv-sidebar {
+  width: 62mm;
+  background-color: #f1f5f9;
+  border-right: 2px solid var(--cv-accent);
+  padding: 16mm 10mm;
+}
+
+.layout-compact .cv-main-content {
+  flex: 1;
+  padding: 16mm 14mm;
+}
+
+.layout-compact .cv-main-header {
+  border-bottom: 2px solid var(--cv-accent);
+  padding-bottom: 6pt;
+}
+
+/* CV Header Elements */
+.cv-candidate-name {
+  font-size: 20pt;
+  font-weight: 800;
+  color: var(--secondary);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.cv-candidate-headline {
+  font-size: 11.5pt;
+  font-weight: 600;
+  color: var(--cv-accent);
+  margin-top: 2pt;
+  letter-spacing: 0.2px;
+}
+
+/* CV Avatar Box */
+.cv-avatar-wrapper {
+  width: 32mm;
+  height: 32mm;
+  margin: 0 auto;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--cv-accent);
+  background-color: var(--cv-accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.cv-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cv-avatar-placeholder {
+  font-size: 16pt;
+  font-weight: 800;
+  color: var(--cv-accent);
+  letter-spacing: 1px;
+}
+
+/* CV Section Titles */
+.cv-section-title {
+  font-size: 10pt;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--cv-accent);
+  margin-bottom: 6pt;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cv-section-title.main-title {
+  border-bottom: 1.5px solid var(--cv-accent);
+  padding-bottom: 2pt;
+}
+
+.cv-section-title.sidebar-title {
+  font-size: 9pt;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 2pt;
+}
+
+/* CV Contact List (Sidebar) */
+.cv-contact-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6pt;
+  font-size: 8.2pt;
+}
+
+.cv-contact-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  line-height: 1.35;
+  min-width: 0;
+}
+
+.cv-contact-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  background-color: var(--cv-accent-light);
+  color: var(--cv-accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1.5px;
+}
+
+.cv-contact-icon svg {
+  width: 11px;
+  height: 11px;
+  stroke: var(--cv-accent);
+}
+
+.cv-contact-text {
+  flex: 1;
+  min-width: 0;
+  word-break: normal;
+  overflow-wrap: break-word;
+  font-size: 8.2pt;
+  color: #1e293b;
+  letter-spacing: -0.01em;
+}
+
+/* CV Skills Cloud */
+.cv-skills-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.cv-skill-pill {
+  font-size: 8pt;
+  font-weight: 600;
+  background-color: #ffffff;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 2px 7px;
+  border-radius: var(--radius-sm);
+}
+
+.layout-sidebar .cv-skill-pill {
+  border-color: #cbd5e1;
+}
+
+/* CV Languages List */
+.cv-languages-list {
+  font-size: 8.5pt;
+  display: flex;
+  flex-direction: column;
+  gap: 4pt;
+}
+
+.cv-lang-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.cv-lang-name {
+  font-weight: 600;
+  color: var(--secondary);
+}
+
+.cv-lang-level {
+  font-size: 7.5pt;
+  color: var(--text-muted);
+}
+
+/* Summary Text */
+.cv-summary-text {
+  font-size: 9.5pt;
+  line-height: 1.5;
+  color: #334155;
+  text-align: justify;
+}
+
+/* Timeline Components (Experience & Education) */
+.cv-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 11pt;
+}
+
+.cv-timeline-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2pt;
+  position: relative;
+}
+
+.timeline-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.timeline-role {
+  font-size: 10pt;
+  font-weight: 700;
+  color: var(--secondary);
+}
+
+.timeline-period {
+  font-size: 8.5pt;
+  font-weight: 600;
+  color: var(--cv-accent);
+  white-space: nowrap;
+}
+
+.timeline-company {
+  font-size: 9pt;
+  font-weight: 600;
+  color: #475569;
+}
+
+.timeline-desc {
+  font-size: 9pt;
+  line-height: 1.45;
+  color: #334155;
+  margin-top: 2pt;
+  white-space: pre-wrap;
+}
+
+/* Certifications Grid */
+.cv-certs-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6pt;
+}
+
+.cv-cert-item {
+  font-size: 9pt;
+  display: flex;
+  justify-content: space-between;
+}
+
+.cv-cert-name {
+  font-weight: 600;
+  color: var(--secondary);
+}
+
+.cv-cert-issuer {
+  color: var(--text-muted);
+  font-size: 8.5pt;
+}
+
+.cv-cert-year {
+  color: var(--cv-accent);
+  font-weight: 600;
+  font-size: 8.5pt;
+}
+
+/* ==========================================================================
+   MODAL & DIALOGS
+   ========================================================================== */
+
+.app-dialog {
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 0;
+  background: transparent;
+  margin: auto;
+  max-width: 90vw;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.app-dialog::backdrop {
+  background-color: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.dialog-card {
+  background-color: #ffffff;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 620px;
+  max-width: 100%;
+}
+
+.dialog-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--secondary-light);
+}
+
+.dialog-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--secondary);
+}
+
+.dialog-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.btn-close-modal {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.btn-close-modal:hover {
+  color: var(--danger);
+}
+
+.dialog-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.dialog-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.pad-container {
+  border: 2px solid #cbd5e1;
+  border-radius: var(--radius-md);
+  background-color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  height: 220px;
+  touch-action: none;
+}
+
+#signCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: crosshair;
+}
+
+.pad-guide-line {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  bottom: 45px;
+  height: 1px;
+  border-bottom: 1px dashed #cbd5e1;
+  pointer-events: none;
+}
+
+.pad-guide-text {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  pointer-events: none;
+}
+
+.pad-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pad-color-picker, .pad-thickness-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.picker-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.color-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.color-dot.active {
+  transform: scale(1.15);
+  box-shadow: 0 0 0 2px #3b82f6;
+}
+
+.btn-tool-size {
+  background-color: var(--secondary-light);
+  border: 1px solid var(--border-color);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.btn-tool-size.active {
+  background-color: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+
+.dialog-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  background-color: var(--secondary-light);
+}
+
+/* Drafts List Styling */
+.drafts-list-wrapper {
+  max-height: 380px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.draft-item {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: var(--transition);
+}
+
+.draft-item:hover {
+  border-color: var(--primary-border);
+  background-color: var(--primary-light);
+}
+
+.draft-info-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--secondary);
+  margin-bottom: 2px;
+}
+
+.draft-info-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.draft-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.empty-drafts-state {
+  text-align: center;
+  padding: 30px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   TOAST NOTIFICATIONS
+   ========================================================================== */
+
+.toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 100;
+}
+
+.toast {
+  background-color: var(--secondary);
+  color: #ffffff;
+  padding: 10px 16px;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: var(--shadow-lg);
+  animation: slideInToast 0.25s ease-out;
+}
+
+.toast-success {
+  background-color: #065f46;
+  border-left: 4px solid #10b981;
+}
+
+.toast-info {
+  background-color: #1e3a8a;
+  border-left: 4px solid #3b82f6;
+}
+
+@keyframes slideInToast {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (MOBILE & TABLET)
+   ========================================================================== */
+
+@media (max-width: 960px) {
+  .app-main {
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+
+  .editor-panel {
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    height: auto;
+  }
+
+  .preview-panel {
+    min-height: 100vh;
+  }
+
+  .a4-sheet {
+    transform: scale(0.9);
+  }
+}
+
+@media (max-width: 640px) {
+  .app-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .header-actions {
+    justify-content: stretch;
+  }
+
+  .header-actions > * {
+    flex: 1;
+  }
+
+  .a4-sheet {
+    transform: scale(0.65);
+    margin: -40px 0;
+  }
+
+  .paper-viewport {
+    padding: 10px 4px 40px 4px;
+  }
+}
+
+/* ==========================================================================
+   PRINT STYLES (@media print) - CLEAN A4 SINGLE / MULTI PAGE OUTPUT
+   ========================================================================== */
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .no-print,
+  .app-header,
+  .editor-panel,
+  .preview-toolbar,
+  .app-dialog,
+  .toast-container {
+    display: none !important;
+  }
+
+  .app-main {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .preview-panel {
+    background: transparent !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  .paper-viewport {
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+
+  .a4-sheet {
+    box-shadow: none !important;
+    border: none !important;
+    width: 100% !important;
+    min-height: 297mm !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+
+  #letterPaper {
+    padding: 20mm 20mm !important;
+  }
+
+  #cvPaper.layout-sidebar,
+  #cvPaper.layout-compact {
+    padding: 0 !important;
+  }
+
+  #cvPaper.layout-ats {
+    padding: 16mm 18mm !important;
+    background-color: #ffffff !important;
+  }
+
+  .layout-ats .cv-section,
+  .layout-ats .cv-timeline-item,
+  .layout-ats .cv-cert-item {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .layout-ats .cv-section-title {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+}

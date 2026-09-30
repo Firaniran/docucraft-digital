@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Aplikasi Pembuat Surat Resmi & CV (Curriculum Vitae) Digital Modern dengan Tanda Tangan Digital, QR Code Verifikasi, dan Ekspor PDF A4">
+  <title>Surat & CV Digital - Suite Dokumen Resmi & Profesional</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Header Bar -->
+  <header class="app-header no-print">
+    <div class="header-brand">
+      <div class="brand-logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+      </div>
+      <div>
+        <h1 class="brand-title">DocuCraft Digital</h1>
+        <p class="brand-subtitle">Generator Surat Resmi & CV Profesional A4</p>
+      </div>
+    </div>
+
+    <!-- Mode Selector: Switch between Letter Maker and CV Maker -->
+    <div class="mode-nav-switcher">
+      <button id="btnModeLetter" class="mode-switch-btn active" data-mode="letter">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+          <polyline points="22,6 12,13 2,6"></polyline>
+        </svg>
+        <span>Surat Digital</span>
+      </button>
+
+      <button id="btnModeCv" class="mode-switch-btn" data-mode="cv">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>Pembuat CV</span>
+      </button>
+    </div>
+
+    <div class="header-actions">
+      <!-- Letter Templates -->
+      <div class="template-dropdown-wrapper" id="letterTemplateWrapper">
+        <label for="templateSelectLetter" class="sr-only">Pilih Template Surat</label>
+        <select id="templateSelectLetter" class="btn-select">
+          <option value="" disabled selected>📂 Contoh Template Surat...</option>
+          <option value="izin_kerja">Surat Izin / Cuti Kerja</option>
+          <option value="lamaran_kerja">Surat Lamaran Pekerjaan</option>
+          <option value="undangan_rapat">Surat Undangan Rapat Resmi</option>
+          <option value="surat_tugas">Surat Tugas / Perintah Dinas</option>
+          <option value="keterangan_aktif">Surat Keterangan Aktif</option>
+          <option value="pernyataan">Surat Pernyataan Resmi</option>
+        </select>
+      </div>
+
+      <!-- CV Preset Data (hanya mengganti isi/data CV, tidak mengubah desain/layout) -->
+      <div class="template-dropdown-wrapper" id="cvTemplateWrapper" style="display: none;">
+        <label for="templateSelectCv" class="sr-only">Pilih Contoh Data CV</label>
+        <select id="templateSelectCv" class="btn-select">
+          <option value="" disabled selected>📊 Isi Contoh Data CV...</option>
+          <option value="d3_it_ats">D3 IT &amp; QC Specialist (ATS)</option>
+          <option value="software_engineer">Software Engineer / Web Dev</option>
+          <option value="hr_admin">Admin &amp; HR Specialist</option>
+          <option value="fresh_grad">Fresh Graduate / Bisnis</option>
+          <option value="uiux_designer">UI/UX &amp; Graphic Designer</option>
+        </select>
+      </div>
+
+      <button id="btnOpenDrafts" class="btn btn-secondary" title="Kelola Draf Tersimpan">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+          <polyline points="17 21 17 13 7 13 7 21"></polyline>
+          <polyline points="7 3 7 8 15 8"></polyline>
+        </svg>
+        <span>Draf (<span id="draftCount">0</span>)</span>
+      </button>
+
+      <button id="btnSaveDraft" class="btn btn-secondary" title="Simpan ke Penyimpanan Lokal">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+          <polyline points="17 21 17 13 7 13 7 21"></polyline>
+          <polyline points="7 3 7 8 15 8"></polyline>
+        </svg>
+        <span>Simpan Draf</span>
+      </button>
+
+      <button id="btnCopyText" class="btn btn-secondary" title="Salin Teks Dokumen">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        <span>Salin Teks</span>
+      </button>
+
+      <button id="btnDownloadDoc" class="btn btn-secondary" title="Unduh sebagai dokumen Microsoft Word (.doc)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="16" y1="13" x2="8" y2="13"></line>
+          <line x1="16" y1="17" x2="8" y2="17"></line>
+          <polyline points="10 9 9 9 8 9"></polyline>
+        </svg>
+        <span id="docBtnLabel">Unduh Word (.doc)</span>
+      </button>
+
+      <button id="btnPrintDoc" class="btn btn-primary" title="Cetak atau Simpan sebagai PDF">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        <span id="printBtnLabel">Unduh PDF / Cetak</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main App Layout -->
+  <main class="app-main">
+
+    <!-- =========================================================================
+         LEFT PANEL 1: LETTER EDITOR PANEL
+         ========================================================================= -->
+    <section class="editor-panel no-print" id="letterEditorPanel" aria-label="Editor Formulir Surat">
+      <div class="panel-header">
+        <div class="tabs-nav">
+          <button class="tab-btn active" data-tab="tab-kop">1. Kop & Format</button>
+          <button class="tab-btn" data-tab="tab-meta">2. Info Surat</button>
+          <button class="tab-btn" data-tab="tab-content">3. Isi Surat</button>
+          <button class="tab-btn" data-tab="tab-sign">4. Tanda Tangan</button>
+        </div>
+      </div>
+
+      <div class="panel-body">
+        <!-- TAB 1: KOP & TAMPILAN -->
+        <div class="tab-content active" id="tab-kop">
+          <div class="form-card">
+            <h2 class="form-title">Pengaturan Format & Tampilan</h2>
+            
+            <div class="form-group">
+              <label for="fontStyleSelect">Gaya Tulisan (Font)</label>
+              <select id="fontStyleSelect" class="form-control">
+                <option value="font-serif-formal" selected>Resmi Baku (Times New Roman)</option>
+                <option value="font-serif-elegant">Elegan Modern (Merriweather)</option>
+                <option value="font-sans">Modern Minimalis (Inter / Sans)</option>
+              </select>
+            </div>
+
+            <div class="form-group-toggle">
+              <label class="switch-label">
+                <input type="checkbox" id="toggleKopSurat" checked>
+                <span class="switch-slider"></span>
+                <span class="switch-text">Gunakan Kop Surat (Header Instansi/Perusahaan)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-card" id="kopSuratFields">
+            <h2 class="form-title">Detail Kop Surat</h2>
+            
+            <div class="form-group">
+              <label for="inputKopLogo">Logo Instansi / Perusahaan (Opsional)</label>
+              <div class="file-input-wrapper">
+                <input type="file" id="inputKopLogo" accept="image/*" class="file-input">
+                <button type="button" class="btn btn-sm btn-outline" id="btnUploadLogoTrigger">Pilih File Logo</button>
+                <button type="button" class="btn btn-sm btn-text text-danger" id="btnRemoveLogo" style="display: none;">Hapus Logo</button>
+              </div>
+              <small class="help-text">Gunakan format PNG transparan untuk hasil terbaik.</small>
+            </div>
+
+            <div class="form-group">
+              <label for="inputInstansiNama">Nama Instansi / Perusahaan / Organisasi</label>
+              <input type="text" id="inputInstansiNama" class="form-control" placeholder="PEMERINTAH KOTA JAKARTA / PT MAJU JAYA ABADI" value="PT NUSANTARA KARYA DIGITAL">
+            </div>
+
+            <div class="form-group">
+              <label for="inputInstansiSub">Divisi / Badan / Unit Kerja</label>
+              <input type="text" id="inputInstansiSub" class="form-control" placeholder="DIVISI TEKNOLOGI & PENGEMBANGAN" value="DIREKTORAT TEKNOLOGI & INFORMASI">
+            </div>
+
+            <div class="form-group">
+              <label for="inputInstansiAlamat">Alamat Lengkap</label>
+              <input type="text" id="inputInstansiAlamat" class="form-control" placeholder="Jl. Jenderal Sudirman No. 45, Jakarta Pusat 10220" value="Jl. MH Thamrin No. 88, Menteng, Jakarta Pusat 10350">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="inputInstansiKontak">Telepon / Fax</label>
+                <input type="text" id="inputInstansiKontak" class="form-control" placeholder="(021) 555-0199" value="Telp: (021) 2345-6789">
+              </div>
+              <div class="form-group col">
+                <label for="inputInstansiEmailWeb">Email / Website</label>
+                <input type="text" id="inputInstansiEmailWeb" class="form-control" placeholder="info@instansi.go.id" value="Email: kontak@nusantarakarya.id | www.nusantarakarya.id">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 2: METADATA SURAT -->
+        <div class="tab-content" id="tab-meta">
+          <div class="form-card">
+            <h2 class="form-title">Nomor & Perihal</h2>
+            
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="inputKotaSurat">Kota Pembuatan</label>
+                <input type="text" id="inputKotaSurat" class="form-control" value="Jakarta">
+              </div>
+              <div class="form-group col">
+                <label for="inputTanggalSurat">Tanggal Surat</label>
+                <input type="date" id="inputTanggalSurat" class="form-control">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="inputNomorSurat">Nomor Surat</label>
+              <input type="text" id="inputNomorSurat" class="form-control" placeholder="001/NKD/HRD/VIII/2026" value="108/NKD-DIR/VIII/2026">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="inputLampiran">Lampiran</label>
+                <input type="text" id="inputLampiran" class="form-control" placeholder="1 (Satu) Berkas / -" value="-">
+              </div>
+              <div class="form-group col">
+                <label for="inputPerihal">Perihal / Hal</label>
+                <input type="text" id="inputPerihal" class="form-control" placeholder="Undangan Rapat Evaluasi Proyek" value="Undangan Rapat Koordinasi Kuartal III">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <h2 class="form-title">Penerima Surat (Tujuan)</h2>
+            
+            <div class="form-group">
+              <label for="inputPenerimaSapaan">Sebutan / Kepada Yth.</label>
+              <input type="text" id="inputPenerimaSapaan" class="form-control" value="Yth. Bapak/Ibu Kepala Departemen">
+            </div>
+
+            <div class="form-group">
+              <label for="inputPenerimaNama">Nama Penerima / Unit (Opsional)</label>
+              <input type="text" id="inputPenerimaNama" class="form-control" placeholder="Seluruh Pimpinan Divisi & Staff Teknis" value="Seluruh Pimpinan Divisi & Manajer Proyek">
+            </div>
+
+            <div class="form-group">
+              <label for="inputPenerimaInstansi">Instansi / Perusahaan Penerima</label>
+              <input type="text" id="inputPenerimaInstansi" class="form-control" placeholder="PT Mitra Solusi Nusantara" value="PT Nusantara Karya Digital">
+            </div>
+
+            <div class="form-group">
+              <label for="inputPenerimaAlamat">Alamat / Lokasi</label>
+              <input type="text" id="inputPenerimaAlamat" class="form-control" placeholder="di Tempat / Jakarta" value="di Tempat">
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 3: ISI SURAT -->
+        <div class="tab-content" id="tab-content">
+          <div class="form-card">
+            <h2 class="form-title">Susunan Konten Surat</h2>
+
+            <div class="form-group">
+              <label for="inputSalamPembuka">Salam Pembuka</label>
+              <input type="text" id="inputSalamPembuka" class="form-control" value="Dengan hormat,">
+            </div>
+
+            <div class="form-group">
+              <label for="inputParagrafPembuka">Paragraf Pembuka</label>
+              <textarea id="inputParagrafPembuka" class="form-control" rows="3" placeholder="Sehubungan dengan dimulainya evaluasi program kerja tahun berjalan...">Sehubungan dengan pelaksanaan evaluasi program kerja dan akselerasi implementasi proyek strategis kuartal ketiga tahun 2026, bersama ini kami mengundang Bapak/Ibu untuk hadir pada agenda rapat koordinasi yang akan dilaksanakan pada:</textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="inputIsiRincian">Detail / Rincian Kegiatan (Opsional)</label>
+              <textarea id="inputIsiRincian" class="form-control font-mono" rows="4" placeholder="Hari/Tanggal : Senin, 24 Agustus 2026&#10;Waktu        : 09.00 - 12.00 WIB&#10;Tempat       : Ruang Pertemuan Utama / Zoom&#10;Agenda       : Evaluasi Proyek & Finalisasi Rencana Kerja">Hari / Tanggal : Senin, 24 Agustus 2026
+Waktu          : 09.00 - 12.00 WIB
+Tempat         : Ruang Rapat Eksekutif Lt. 5 & Virtual Teleconference
+Agenda         : Pembahasan Capaian Q3 & Finalisasi Roadmap Digitalisasi</textarea>
+              <small class="help-text">Gunakan format baris per baris untuk jadwal, rincian, atau data diri.</small>
+            </div>
+
+            <div class="form-group">
+              <label for="inputParagrafPenutup">Paragraf Penutup</label>
+              <textarea id="inputParagrafPenutup" class="form-control" rows="3" placeholder="Demikian surat ini kami sampaikan...">Mengingat pentingnya agenda pembahasan tersebut, kami sangat mengharapkan kehadiran Bapak/Ibu tepat pada waktunya. Atas perhatian, kerja sama, dan kehadiran Bapak/Ibu, kami sampaikan terima kasih.</textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="inputSalamPenutup">Salam Penutup</label>
+              <input type="text" id="inputSalamPenutup" class="form-control" value="Hormat kami,">
+            </div>
+
+            <div class="form-group">
+              <label for="inputTembusan">Tembusan (Opsional - pisahkan dengan baris baru)</label>
+              <textarea id="inputTembusan" class="form-control" rows="2" placeholder="1. Direktur Utama&#10;2. Arsip">1. Direktur Utama PT Nusantara Karya Digital
+2. Arsip Bagian Sekretariat</textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB 4: TANDA TANGAN & VALIDASI -->
+        <div class="tab-content" id="tab-sign">
+          <div class="form-card">
+            <h2 class="form-title">Pejabat / Penandatangan</h2>
+
+            <div class="form-group">
+              <label for="inputJabatanPengirim">Jabatan Penandatangan</label>
+              <input type="text" id="inputJabatanPengirim" class="form-control" value="Direktur Operasional & Teknologi">
+            </div>
+
+            <div class="form-group">
+              <label for="inputNamaPengirim">Nama Lengkap Penandatangan</label>
+              <input type="text" id="inputNamaPengirim" class="form-control" value="Dr. Hendra Wijaya, S.Kom., M.T.">
+            </div>
+
+            <div class="form-group">
+              <label for="inputNipPengirim">NIP / NIK / ID Karyawan (Opsional)</label>
+              <input type="text" id="inputNipPengirim" class="form-control" placeholder="NIP. 19850412 201001 1 002" value="NIK. 2016-09-0042">
+            </div>
+          </div>
+
+          <div class="form-card">
+            <h2 class="form-title">Tanda Tangan & Cap Digital</h2>
+
+            <div class="signature-manager">
+              <div class="sign-preview-box" id="signPreviewBox">
+                <span class="sign-placeholder-text">Belum ada tanda tangan digital</span>
+                <img id="imgSignPreview" src="" alt="Pratinjau Tanda Tangan" style="display:none;">
+              </div>
+
+              <div class="sign-actions">
+                <button type="button" class="btn btn-outline" id="btnOpenSignPad">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 20h9"></path>
+                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                  </svg>
+                  <span>Gores Tanda Tangan</span>
+                </button>
+
+                <label class="btn btn-outline file-btn-label">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                  </svg>
+                  <span>Unggah Gambar TT</span>
+                  <input type="file" id="inputUploadSign" accept="image/*" class="sr-only">
+                </label>
+
+                <button type="button" class="btn btn-text text-danger" id="btnClearSignature" style="display:none;">
+                  Hapus Tanda Tangan
+                </button>
+              </div>
+            </div>
+
+            <div class="form-divider"></div>
+
+            <div class="form-group-toggle">
+              <label class="switch-label">
+                <input type="checkbox" id="toggleQrCode" checked>
+                <span class="switch-slider"></span>
+                <span class="switch-text">Tampilkan QR Code Verifikasi Digital</span>
+              </label>
+            </div>
+            <small class="help-text">QR Code otomatis menghasilkan kode identifikasi integritas dokumen.</small>
+
+            <div class="form-divider"></div>
+
+            <div class="form-group">
+              <label for="inputUploadStamp">Unggah Cap Stempel / Meterai (Opsional PNG)</label>
+              <div class="file-input-wrapper">
+                <input type="file" id="inputUploadStamp" accept="image/*" class="file-input">
+                <button type="button" class="btn btn-sm btn-outline" id="btnUploadStampTrigger">Pilih Cap Stempel</button>
+                <button type="button" class="btn btn-sm btn-text text-danger" id="btnRemoveStamp" style="display: none;">Hapus Stempel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Panel Footer Status -->
+      <div class="panel-footer">
+        <span class="status-indicator">
+          <span class="dot-online"></span> Autosave Surat Aktif
+        </span>
+        <button id="btnResetForm" class="btn-text-subtle" title="Kembalikan formulir surat ke kondisi awal">
+          Reset Formulir
+        </button>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         LEFT PANEL 2: CV EDITOR PANEL
+         ========================================================================= -->
+    <section class="editor-panel no-print" id="cvEditorPanel" style="display: none;" aria-label="Editor Formulir CV">
+      <div class="panel-header">
+        <div class="tabs-nav">
+          <button class="tab-btn cv-tab-btn active" data-tab="cv-tab-profile">1. Profil & Desain</button>
+          <button class="tab-btn cv-tab-btn" data-tab="cv-tab-exp">2. Karir & Ringkasan</button>
+          <button class="tab-btn cv-tab-btn" data-tab="cv-tab-edu">3. Edukasi & Skill</button>
+          <button class="tab-btn cv-tab-btn" data-tab="cv-tab-extra">4. Sertifikat & Lainnya</button>
+        </div>
+      </div>
+
+      <div class="panel-body">
+        <!-- CV TAB 1: PROFIL & DESAIN -->
+        <div class="tab-content cv-tab-content active" id="cv-tab-profile">
+          <div class="form-card">
+            <h2 class="form-title">Pengaturan Tata Letak & Warna CV</h2>
+
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="cvLayoutSelect">Template Desain CV</label>
+                <select id="cvLayoutSelect" class="form-control">
+                  <option value="layout-sidebar" selected>Modern 2-Column (Sidebar Elegan)</option>
+                  <option value="layout-ats">Minimalist ATS-Friendly (1-Kolom Bersih)</option>
+                  <option value="layout-compact">Elegant Professional (Header Aksen Penuh)</option>
+                </select>
+              </div>
+
+              <div class="form-group col">
+                <label for="cvLanguageSelect">Bahasa Heading CV / Language</label>
+                <select id="cvLanguageSelect" class="form-control">
+                  <option value="id" selected>🇮🇩 Bahasa Indonesia</option>
+                  <option value="en">🇬🇧 English (Internasional)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="cvFontSelect">Font Teks</label>
+                <select id="cvFontSelect" class="form-control">
+                  <option value="font-sans" selected>Modern Sans (Inter / Clean)</option>
+                  <option value="font-serif-formal">Klasik Formal (Times New Roman)</option>
+                  <option value="font-serif-elegant">Editorial (Merriweather)</option>
+                </select>
+              </div>
+
+              <div class="form-group col">
+                <label>Tema Warna Aksen</label>
+                <div class="color-picker-row">
+                  <button type="button" class="cv-color-dot active" data-color="#1e40af" style="background:#1e40af;" title="Navy Blue"></button>
+                  <button type="button" class="cv-color-dot" data-color="#059669" style="background:#059669;" title="Emerald Green"></button>
+                  <button type="button" class="cv-color-dot" data-color="#4d1226" style="background:#4d1226;" title="Dark Burgundy"></button>
+                  <button type="button" class="cv-color-dot" data-color="#0f172a" style="background:#0f172a;" title="Slate Black"></button>
+                  <button type="button" class="cv-color-dot" data-color="#6b21a8" style="background:#6b21a8;" title="Royal Purple"></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group-toggle">
+              <label class="switch-label">
+                <input type="checkbox" id="toggleCvPhoto" checked>
+                <span class="switch-slider"></span>
+                <span class="switch-text">Tampilkan Foto Profil</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <h2 class="form-title">Informasi Pribadi & Kontak</h2>
+
+            <div class="form-group" id="cvPhotoUploadGroup">
+              <label for="inputCvPhoto">Foto Profil (Opsional)</label>
+              <div class="file-input-wrapper">
+                <input type="file" id="inputCvPhoto" accept="image/*" class="file-input">
+                <button type="button" class="btn btn-sm btn-outline" id="btnUploadCvPhoto">Pilih Foto</button>
+                <button type="button" class="btn btn-sm btn-text text-danger" id="btnRemoveCvPhoto" style="display:none;">Hapus Foto</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="inputCvFullName">Nama Lengkap & Gelar</label>
+              <input type="text" id="inputCvFullName" class="form-control" placeholder="Rizky Pratama, S.Kom." value="Rizky Pratama, S.Kom.">
+            </div>
+
+            <div class="form-group">
+              <label for="inputCvHeadline">Profesi / Posisi yang Dilamar (Headline)</label>
+              <input type="text" id="inputCvHeadline" class="form-control" placeholder="Senior Frontend Engineer / UI-UX Lead" value="Senior Frontend Engineer">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="inputCvEmail">Email</label>
+                <input type="email" id="inputCvEmail" class="form-control" placeholder="rizky.pratama@email.com" value="rizky.pratama@email.com">
+              </div>
+              <div class="form-group col">
+                <label for="inputCvPhone">No. Telepon / WhatsApp</label>
+                <input type="text" id="inputCvPhone" class="form-control" placeholder="+62 812-3456-7890" value="+62 812-3456-7890">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="inputCvLocation">Domisili / Kota & Negara</label>
+              <input type="text" id="inputCvLocation" class="form-control" placeholder="Jakarta Selatan, Indonesia" value="Jakarta Selatan, Indonesia">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col">
+                <label for="inputCvLinkedin">LinkedIn (Opsional)</label>
+                <input type="text" id="inputCvLinkedin" class="form-control" placeholder="linkedin.com/in/rizkypratama" value="linkedin.com/in/rizkypratama">
+              </div>
+              <div class="form-group col">
+                <label for="inputCvPortfolio">Portofolio / GitHub / Web</label>
+                <input type="text" id="inputCvPortfolio" class="form-control" placeholder="github.com/rizkydev" value="github.com/rizkydev">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CV TAB 2: RINGKASAN & KARIR -->
+        <div class="tab-content cv-tab-content" id="cv-tab-exp">
+          <div class="form-card">
+            <h2 class="form-title">Ringkasan Profesional (Summary)</h2>
+            <div class="form-group">
+              <textarea id="inputCvSummary" class="form-control" rows="4" placeholder="Jelaskan ringkasan karir, keahlian utama, dan pencapaian terpenting Anda...">Software Engineer berdedikasi dengan pengalaman lebih dari 4 tahun dalam membangun aplikasi web modern, performan, dan berpusat pada kepuasan pengguna. Memiliki keahlian mendalam pada ekosistem JavaScript modern, desain arsitektur frontend, serta kolaborasi lintas tim untuk menghadirkan solusi teknologi terukur.</textarea>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <div class="card-header-flex">
+              <h2 class="form-title" style="margin-bottom:0; border:none;">Pengalaman Kerja</h2>
+              <button type="button" class="btn btn-sm btn-primary" id="btnAddCvExperience">+ Tambah Pengalaman</button>
+            </div>
+            
+            <div id="cvExperienceList" class="dynamic-items-container">
+              <!-- Dynamic Experience Items Injected via JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- CV TAB 3: EDUKASI & SKILL -->
+        <div class="tab-content cv-tab-content" id="cv-tab-edu">
+          <div class="form-card">
+            <div class="card-header-flex">
+              <h2 class="form-title" style="margin-bottom:0; border:none;">Riwayat Pendidikan</h2>
+              <button type="button" class="btn btn-sm btn-primary" id="btnAddCvEducation">+ Tambah Pendidikan</button>
+            </div>
+
+            <div id="cvEducationList" class="dynamic-items-container">
+              <!-- Dynamic Education Items Injected via JS -->
+            </div>
+          </div>
+
+          <div class="form-card">
+            <h2 class="form-title">Keahlian (Skills)</h2>
+
+            <div class="form-group">
+              <label for="inputCvHardSkills">Keahlian Teknis / Hard Skills (Pisahkan dengan koma)</label>
+              <textarea id="inputCvHardSkills" class="form-control" rows="3" placeholder="JavaScript, TypeScript, React, HTML5, CSS3, REST API, Git, Docker">JavaScript, TypeScript, React.js, Next.js, HTML5 & CSS3, Node.js, REST API, Git, Tailwind CSS, Responsive Web Design</textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="inputCvSoftSkills">Keahlian Interpersonal / Soft Skills (Pisahkan dengan koma)</label>
+              <input type="text" id="inputCvSoftSkills" class="form-control" placeholder="Problem Solving, Kepemimpinan Tim, Komunikasi Efektif" value="Problem Solving, Kepemimpinan Tim, Komunikasi Efektif, Manajemen Waktu, Kolaborasi Agile">
+            </div>
+          </div>
+        </div>
+
+        <!-- CV TAB 4: SERTIFIKASI & LAINNYA -->
+        <div class="tab-content cv-tab-content" id="cv-tab-extra">
+          <div class="form-card">
+            <div class="card-header-flex">
+              <h2 class="form-title" style="margin-bottom:0; border:none;">Sertifikasi & Lisensi</h2>
+              <button type="button" class="btn btn-sm btn-primary" id="btnAddCvCert">+ Tambah Sertifikat</button>
+            </div>
+
+            <div id="cvCertList" class="dynamic-items-container">
+              <!-- Dynamic Certs Injected via JS -->
+            </div>
+          </div>
+
+          <div class="form-card">
+            <h2 class="form-title">Bahasa (Languages)</h2>
+            <div class="form-group">
+              <label for="inputCvLanguages">Daftar Bahasa & Kemahiran (Pisahkan dengan baris baru)</label>
+              <textarea id="inputCvLanguages" class="form-control" rows="3" placeholder="Bahasa Indonesia - Penutur Asli (Native)&#10;Bahasa Inggris - Fasih Profesional (TOEFL 580)">Bahasa Indonesia - Penutur Asli (Native)
+Bahasa Inggris - Fasih Profesional (Fluent / Working Proficiency)</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CV Panel Footer Status -->
+      <div class="panel-footer">
+        <span class="status-indicator">
+          <span class="dot-online"></span> Autosave CV Aktif
+        </span>
+        <button id="btnResetCvForm" class="btn-text-subtle" title="Kembalikan formulir CV ke kondisi awal">
+          Reset Formulir CV
+        </button>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         RIGHT PANEL: LIVE A4 PAPER PREVIEW (SURAT & CV)
+         ========================================================================= -->
+    <section class="preview-panel" aria-label="Pratinjau Kertas A4">
+      <!-- Floating Toolbar for preview zoom and fit -->
+      <div class="preview-toolbar no-print">
+        <div class="zoom-controls">
+          <button id="btnZoomOut" class="btn-tool" title="Perkecil Tampilan">-</button>
+          <span id="zoomLabel" class="zoom-label">100%</span>
+          <button id="btnZoomIn" class="btn-tool" title="Perbesar Tampilan">+</button>
+          <button id="btnFitWidth" class="btn-tool" title="Sesuaikan Lebar">Fit</button>
+        </div>
+        <div class="paper-badge" id="paperBadgeMode">Format Standar A4 Resmi (210 × 297 mm)</div>
+      </div>
+
+      <!-- A4 Sheet Container with scaling wrapper -->
+      <div class="paper-viewport" id="paperViewport">
+        
+        <!-- TARGET 1: A4 SHEET SURAT -->
+        <article class="a4-sheet font-serif-formal" id="letterPaper">
+          <!-- KOP SURAT (HEADER INSTANSI) -->
+          <header class="letter-kop" id="letterKop">
+            <div class="kop-logo-container" id="kopLogoContainer" style="display:none;">
+              <img id="kopLogoImg" src="" alt="Logo Instansi" class="kop-logo">
+            </div>
+            <div class="kop-text-container">
+              <h2 class="kop-instansi" id="renderInstansiNama">PT NUSANTARA KARYA DIGITAL</h2>
+              <p class="kop-sub" id="renderInstansiSub">DIREKTORAT TEKNOLOGI & INFORMASI</p>
+              <p class="kop-alamat" id="renderInstansiAlamat">Jl. MH Thamrin No. 88, Menteng, Jakarta Pusat 10350</p>
+              <p class="kop-kontak">
+                <span id="renderInstansiKontak">Telp: (021) 2345-6789</span>
+                <span class="kop-sep" id="renderKopSep">|</span>
+                <span id="renderInstansiEmailWeb">Email: kontak@nusantarakarya.id | www.nusantarakarya.id</span>
+              </p>
+            </div>
+            <div class="kop-divider">
+              <div class="kop-line-thick"></div>
+              <div class="kop-line-thin"></div>
+            </div>
+          </header>
+
+          <!-- TANGGAL & NOMOR -->
+          <div class="letter-meta-header">
+            <div class="meta-left">
+              <table class="meta-table">
+                <tr id="rowNomorSurat">
+                  <td class="meta-key">Nomor</td>
+                  <td class="meta-colon">:</td>
+                  <td class="meta-val" id="renderNomorSurat">108/NKD-DIR/VIII/2026</td>
+                </tr>
+                <tr id="rowLampiran">
+                  <td class="meta-key">Lampiran</td>
+                  <td class="meta-colon">:</td>
+                  <td class="meta-val" id="renderLampiran">-</td>
+                </tr>
+                <tr id="rowPerihal">
+                  <td class="meta-key">Perihal</td>
+                  <td class="meta-colon">:</td>
+                  <td class="meta-val font-bold" id="renderPerihal">Undangan Rapat Koordinasi Kuartal III</td>
+                </tr>
+              </table>
+            </div>
+            <div class="meta-right">
+              <p class="letter-date" id="renderTanggalSurat">Jakarta, 16 Agustus 2026</p>
+            </div>
+          </div>
+
+          <!-- TUJUAN / PENERIMA SURAT -->
+          <div class="letter-recipient">
+            <p class="recipient-to" id="renderPenerimaSapaan">Kepada Yth.</p>
+            <p class="recipient-name font-bold" id="renderPenerimaNama">Seluruh Pimpinan Divisi & Manajer Proyek</p>
+            <p class="recipient-instansi" id="renderPenerimaInstansi">PT Nusantara Karya Digital</p>
+            <p class="recipient-address" id="renderPenerimaAlamat">di Tempat</p>
+          </div>
+
+          <!-- ISI SURAT -->
+          <div class="letter-body">
+            <p class="letter-salutation" id="renderSalamPembuka">Dengan hormat,</p>
+            
+            <p class="letter-paragraph" id="renderParagrafPembuka">
+              Sehubungan dengan pelaksanaan evaluasi program kerja dan akselerasi implementasi proyek strategis kuartal ketiga tahun 2026, bersama ini kami mengundang Bapak/Ibu untuk hadir pada agenda rapat koordinasi yang akan dilaksanakan pada:
+            </p>
+
+            <div class="letter-details" id="renderIsiRincianWrapper">
+              <pre class="details-pre" id="renderIsiRincian">Hari / Tanggal : Senin, 24 Agustus 2026
+Waktu          : 09.00 - 12.00 WIB
+Tempat         : Ruang Rapat Eksekutif Lt. 5 & Virtual Teleconference
+Agenda         : Pembahasan Capaian Q3 & Finalisasi Roadmap Digitalisasi</pre>
+            </div>
+
+            <p class="letter-paragraph" id="renderParagrafPenutup">
+              Mengingat pentingnya agenda pembahasan tersebut, kami sangat mengharapkan kehadiran Bapak/Ibu tepat pada waktunya. Atas perhatian, kerja sama, dan kehadiran Bapak/Ibu, kami sampaikan terima kasih.
+            </p>
+
+            <p class="letter-closing" id="renderSalamPenutup">Hormat kami,</p>
+          </div>
+
+          <!-- AREA TANDA TANGAN & PENANDATANGAN -->
+          <div class="letter-signature-section">
+            <div class="qr-verify-box" id="renderQrBox">
+              <div class="qr-code-img-wrapper" id="qrCodeContainer"></div>
+              <div class="qr-label-wrapper">
+                <span class="qr-secure-badge">
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                  </svg>
+                  Terverifikasi Digital
+                </span>
+                <span class="qr-doc-hash" id="renderDocHash">DOC-NKD-2026-X89</span>
+              </div>
+            </div>
+
+            <div class="signature-box">
+              <p class="signer-title" id="renderJabatanPengirim">Direktur Operasional & Teknologi</p>
+              
+              <div class="signer-canvas-area" id="renderSignArea">
+                <img id="renderStampImg" src="" alt="Cap Instansi" class="stamp-overlay" style="display:none;">
+                <img id="renderSignImg" src="" alt="Tanda Tangan" class="sign-image" style="display:none;">
+                <div class="sign-spacing" id="renderSignSpacing"></div>
+              </div>
+
+              <p class="signer-name font-bold underline" id="renderNamaPengirim">Dr. Hendra Wijaya, S.Kom., M.T.</p>
+              <p class="signer-nip" id="renderNipPengirim">NIK. 2016-09-0042</p>
+            </div>
+          </div>
+
+          <!-- TEMBUSAN -->
+          <div class="letter-tembusan" id="renderTembusanWrapper">
+            <p class="tembusan-title">Tembusan:</p>
+            <div class="tembusan-list" id="renderTembusanList">
+              <p>1. Direktur Utama PT Nusantara Karya Digital</p>
+              <p>2. Arsip Bagian Sekretariat</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- TARGET 2: A4 SHEET CV (CURRICULUM VITAE) -->
+        <article class="a4-sheet cv-paper layout-sidebar font-sans" id="cvPaper" style="display: none;">
+          
+          <!-- CV CONTAINER: SIDEBAR & MAIN BODY -->
+          <div class="cv-layout-wrapper">
+            
+            <!-- CV SIDEBAR / LEFT COLUMN -->
+            <aside class="cv-sidebar" id="cvSidebar">
+              <!-- Avatar Photo -->
+              <div class="cv-avatar-wrapper" id="renderCvAvatarContainer">
+                <img id="renderCvAvatarImg" src="" alt="Foto Profil" class="cv-avatar-img" style="display:none;">
+                <div class="cv-avatar-placeholder" id="renderCvAvatarPlaceholder">RP</div>
+              </div>
+
+              <!-- Contact Section -->
+              <div class="cv-section cv-sidebar-section">
+                <h3 class="cv-section-title sidebar-title" id="renderCvTitleContact">KONTAK</h3>
+                <ul class="cv-contact-list">
+                  <li id="cvContactEmailRow">
+                    <span class="cv-contact-icon">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                      </svg>
+                    </span>
+                    <span class="cv-contact-text" id="renderCvEmail">rizky.pratama@email.com</span>
+                  </li>
+                  <li id="cvContactPhoneRow">
+                    <span class="cv-contact-icon">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                      </svg>
+                    </span>
+                    <span class="cv-contact-text" id="renderCvPhone">+62 812-3456-7890</span>
+                  </li>
+                  <li id="cvContactLocRow">
+                    <span class="cv-contact-icon">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                      </svg>
+                    </span>
+                    <span class="cv-contact-text" id="renderCvLocation">Jakarta Selatan, Indonesia</span>
+                  </li>
+                  <li id="cvContactLinkedinRow">
+                    <span class="cv-contact-icon">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                        <rect x="2" y="9" width="4" height="12"></rect>
+                        <circle cx="4" cy="4" r="2"></circle>
+                      </svg>
+                    </span>
+                    <span class="cv-contact-text" id="renderCvLinkedin">linkedin.com/in/rizkypratama</span>
+                  </li>
+                  <li id="cvContactPortoRow">
+                    <span class="cv-contact-icon">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                      </svg>
+                    </span>
+                    <span class="cv-contact-text" id="renderCvPortfolio">github.com/rizkydev</span>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Skills Section in Sidebar -->
+              <div class="cv-section cv-sidebar-section">
+                <h3 class="cv-section-title sidebar-title" id="renderCvTitleHardSkills">KEAHLIAN UTAMA</h3>
+                <div class="cv-skills-cloud" id="renderCvHardSkills">
+                  <!-- Rendered skill chips -->
+                </div>
+              </div>
+
+              <!-- Soft Skills in Sidebar -->
+              <div class="cv-section cv-sidebar-section" id="renderCvSoftSkillsSection">
+                <h3 class="cv-section-title sidebar-title" id="renderCvTitleSoftSkills">SOFT SKILLS</h3>
+                <div class="cv-skills-cloud" id="renderCvSoftSkills">
+                  <!-- Rendered soft skill chips -->
+                </div>
+              </div>
+
+              <!-- Languages in Sidebar -->
+              <div class="cv-section cv-sidebar-section" id="renderCvLanguagesSection">
+                <h3 class="cv-section-title sidebar-title" id="renderCvTitleLanguages">BAHASA</h3>
+                <div class="cv-languages-list" id="renderCvLanguages">
+                  <!-- Rendered languages -->
+                </div>
+              </div>
+            </aside>
+
+            <!-- CV MAIN CONTENT / RIGHT COLUMN -->
+            <main class="cv-main-content">
+              <!-- Header with Name, Headline, Contact Info, and Optional ATS Photo -->
+              <header class="cv-main-header">
+                <div class="cv-main-header-info">
+                  <h1 class="cv-candidate-name" id="renderCvFullName">Rizky Pratama, S.Kom.</h1>
+                  <p class="cv-candidate-headline" id="renderCvHeadline">Senior Frontend Engineer</p>
+                  
+                  <!-- ATS 1-Column Contact Bar (Only visible in ATS mode) -->
+                  <div class="cv-ats-contact-bar" id="renderCvAtsContactBar" style="display:none;"></div>
+                </div>
+
+                <!-- ATS Profile Photo in Header (Right Side, 28x35mm) -->
+                <div class="cv-ats-photo-wrapper" id="renderCvAtsPhotoWrapper" style="display:none;">
+                  <img id="renderCvAtsPhotoImg" src="" alt="Foto Profil" class="cv-ats-photo-img" style="display:none;">
+                  <div class="cv-ats-photo-placeholder" id="renderCvAtsPhotoPlaceholder">FOTO</div>
+                </div>
+              </header>
+
+              <!-- Professional Summary -->
+              <section class="cv-section" id="renderCvSummarySection">
+                <h2 class="cv-section-title main-title" id="renderCvTitleSummary">PROFIL PROFESIONAL</h2>
+                <p class="cv-summary-text" id="renderCvSummary">
+                  Software Engineer berdedikasi dengan pengalaman lebih dari 4 tahun dalam membangun aplikasi web modern, performan, dan berpusat pada kepuasan pengguna. Memiliki keahlian mendalam pada ekosistem JavaScript modern, desain arsitektur frontend, serta kolaborasi lintas tim untuk menghadirkan solusi teknologi terukur.
+                </p>
+              </section>
+
+              <!-- Work Experience -->
+              <section class="cv-section" id="renderCvExpSection">
+                <h2 class="cv-section-title main-title" id="renderCvTitleExp">PENGALAMAN KERJA</h2>
+                <div class="cv-timeline" id="renderCvExperienceTimeline">
+                  <!-- Experience timeline items dynamically injected here -->
+                </div>
+              </section>
+
+              <!-- Education -->
+              <section class="cv-section" id="renderCvEduSection">
+                <h2 class="cv-section-title main-title" id="renderCvTitleEdu">PENDIDIKAN</h2>
+                <div class="cv-timeline" id="renderCvEducationTimeline">
+                  <!-- Education items dynamically injected here -->
+                </div>
+              </section>
+
+              <!-- ATS Skills Section (Visible in ATS mode) -->
+              <section class="cv-section cv-ats-skills-section" id="renderCvAtsSkillsSection" style="display:none;">
+                <h2 class="cv-section-title main-title" id="renderCvTitleAtsSkills">KEAHLIAN</h2>
+                <div class="cv-ats-skills-body" id="renderCvAtsSkillsContent">
+                  <!-- Rendered inline skills -->
+                </div>
+              </section>
+
+              <!-- Certifications -->
+              <section class="cv-section" id="renderCvCertSection">
+                <h2 class="cv-section-title main-title" id="renderCvTitleCert">SERTIFIKASI & PELATIHAN</h2>
+                <div class="cv-certs-grid" id="renderCvCertTimeline">
+                  <!-- Certifications items dynamically injected here -->
+                </div>
+              </section>
+
+              <!-- ATS Languages Section (Visible in ATS mode) -->
+              <section class="cv-section cv-ats-lang-section" id="renderCvAtsLangSection" style="display:none;">
+                <h2 class="cv-section-title main-title" id="renderCvTitleAtsLang">BAHASA</h2>
+                <div class="cv-ats-lang-body" id="renderCvAtsLangContent">
+                  <!-- Rendered inline languages -->
+                </div>
+              </section>
+            </main>
+
+          </div>
+        </article>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL: DIGITAL SIGNATURE PAD -->
+  <dialog id="modalSignPad" class="app-dialog">
+    <div class="dialog-card">
+      <div class="dialog-header">
+        <div class="dialog-title-wrapper">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 20h9"></path>
+            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+          </svg>
+          <h2 class="dialog-title">Goreskan Tanda Tangan Digital</h2>
+        </div>
+        <button type="button" class="btn-close-modal" id="btnCloseSignPad" aria-label="Tutup Dialog">&times;</button>
+      </div>
+
+      <div class="dialog-body">
+        <p class="dialog-desc">Gunakan kursor mouse, trackpad, atau sentuhan jari/stylus di area kotak di bawah ini.</p>
+        
+        <div class="pad-container">
+          <canvas id="signCanvas" width="560" height="240"></canvas>
+          <div class="pad-guide-line"></div>
+          <span class="pad-guide-text">Tanda tangan di atas garis ini</span>
+        </div>
+
+        <div class="pad-toolbar">
+          <div class="pad-color-picker">
+            <span class="picker-label">Warna Tinta:</span>
+            <button type="button" class="color-dot active" data-color="#0f172a" style="background-color: #0f172a;" title="Hitam Formal"></button>
+            <button type="button" class="color-dot" data-color="#1e3a8a" style="background-color: #1e3a8a;" title="Biru Resmi"></button>
+            <button type="button" class="color-dot" data-color="#0369a1" style="background-color: #0369a1;" title="Biru Cerah"></button>
+          </div>
+
+          <div class="pad-thickness-picker">
+            <span class="picker-label">Ketebalan:</span>
+            <button type="button" class="btn-tool-size" data-size="2">Halus</button>
+            <button type="button" class="btn-tool-size active" data-size="3.5">Sedang</button>
+            <button type="button" class="btn-tool-size" data-size="5">Tebal</button>
+          </div>
+
+          <button type="button" class="btn btn-sm btn-outline text-danger" id="btnClearCanvas">
+            Bersihkan
+          </button>
+        </div>
+      </div>
+
+      <div class="dialog-footer">
+        <button type="button" class="btn btn-secondary" id="btnCancelSignPad">Batal</button>
+        <button type="button" class="btn btn-primary" id="btnApplySignature">Terapkan ke Surat</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- MODAL: DRAFTS MANAGER (SURAT & CV) -->
+  <dialog id="modalDrafts" class="app-dialog">
+    <div class="dialog-card">
+      <div class="dialog-header">
+        <div class="dialog-title-wrapper">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+          </svg>
+          <h2 class="dialog-title" id="draftsModalTitle">Draf Dokumen Tersimpan</h2>
+        </div>
+        <button type="button" class="btn-close-modal" id="btnCloseDrafts" aria-label="Tutup Dialog">&times;</button>
+      </div>
+
+      <div class="dialog-body">
+        <div id="draftsListContainer" class="drafts-list-wrapper">
+          <!-- Drafts dynamically injected here -->
+        </div>
+      </div>
+
+      <div class="dialog-footer">
+        <button type="button" class="btn btn-secondary" id="btnCloseDraftsBtn">Tutup</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container no-print" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
