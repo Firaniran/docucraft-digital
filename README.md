@@ -4,7 +4,7 @@ Generator surat resmi dan CV berformat A4 yang jalan langsung di browser. Isi fo
 
 Tidak ada backend, tidak ada proses build, dan tidak ada akun. Semua data tetap di browser kamu.
 
-**Demo:** https://USERNAME.github.io/docucraft-digital/
+**Demo:** (https://firaniran.github.io/docucraft-digital/)
 
 ## Isinya
 
